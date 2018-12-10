@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from './react-redux/index';
 
-// @connect
+@connect
 class Demo extends Component {
     constructor(props) {
         super(props);
