@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Provider } from './react-redux/index';
+import { createStore } from './redux/index';
 import Context from './context';
 import Footer from './component/footer';
 import Demo from './demo';
@@ -12,7 +13,9 @@ class App extends Component {
         <Provider store={{test:'test'}}>
           <Footer/>
         </Provider>
-        <Demo/>
+        <Provider store={{color: 'pink'}}>
+          <Demo/>
+        </Provider>
       </div>
     );
   }

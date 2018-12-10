@@ -1,13 +1,18 @@
 import React, { Component } from 'react';
 import { connect } from './react-redux/index';
 
-@connect
+const mapStateToProps = state => {
+    return {
+        color: state.color
+    }
+}
 class Demo extends Component {
     constructor(props) {
         super(props);
         this.state = {  };
     }
     render() {
+        console.log(this.props);
         return (
             <div>
                 <h2>react-redux</h2>
@@ -16,6 +21,6 @@ class Demo extends Component {
     }
 }
 
-
+Demo = connect(mapStateToProps)(Demo);
 
 export default Demo;

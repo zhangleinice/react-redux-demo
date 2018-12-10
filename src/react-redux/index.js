@@ -50,6 +50,7 @@ export const connect = (mapStateToProps, mapDispatchToProps) => WarpComponent =>
 
         _updateProps() {
             const { store } = this.context;
+            console.log(store);
             let stateProps = mapStateToProps
                     ? mapStateToProps(store.getState(), this.props)
                     : {} 
