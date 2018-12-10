@@ -3,14 +3,14 @@ import { connect } from './react-redux/index';
 
 const mapStateToProps = state => {
     return {
-        color: state.color
+        theme: state
     }
 }
 class Demo extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {  };
-    }
+    // 把每个组件的 static抽到 hoc connect中复用
+    // static contextTypes = {
+    //     store: PropTypes.object
+    // }
     render() {
         console.log(this.props);
         return (

@@ -4,6 +4,9 @@ import { createStore } from './redux/index';
 import Context from './context';
 import Footer from './component/footer';
 import Demo from './demo';
+import { themeReducer } from './demo/reducer';
+
+const store = createStore(themeReducer);
 
 class App extends Component {
   render() {
@@ -13,7 +16,7 @@ class App extends Component {
         <Provider store={{test:'test'}}>
           <Footer/>
         </Provider>
-        <Provider store={{color: 'pink'}}>
+        <Provider store={store}>
           <Demo/>
         </Provider>
       </div>

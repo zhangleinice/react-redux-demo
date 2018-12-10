@@ -7,7 +7,7 @@ export class Provider extends Component{
         children: PropTypes.any
     }
     static childContextTypes = {
-        store: PropTypes.string
+        store: PropTypes.object
     }
     getChildContext() {
         return { 
@@ -15,6 +15,8 @@ export class Provider extends Component{
         };
     }
     render() {
+        // console.log(this.props);
+        // console.log(this.context);
         return <div>
                     <h2>provider</h2>
                     {this.props.children}
@@ -31,7 +33,7 @@ export const connect = (mapStateToProps, mapDispatchToProps) => WarpComponent =>
                 allProps: {}
             }
         }
-
+        // 抽出每个组件的 context，复用
         static contextTypes = {
             store: PropTypes.object
         }
@@ -50,7 +52,6 @@ export const connect = (mapStateToProps, mapDispatchToProps) => WarpComponent =>
 
         _updateProps() {
             const { store } = this.context;
-            console.log(store);
             let stateProps = mapStateToProps
                     ? mapStateToProps(store.getState(), this.props)
                     : {} 

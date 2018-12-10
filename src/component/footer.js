@@ -6,8 +6,7 @@ class Footer extends Component {
         store: PropTypes.object
     }
     render() {
-        console.log(this.context);
-        console.log(this.props);
+        // console.log(this.context);
         return (
             <div>footer</div>
         );
