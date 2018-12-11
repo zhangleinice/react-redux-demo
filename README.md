@@ -12,7 +12,9 @@
 2，用一个容器（w）把React组件包裹，高阶组件会返回一个增强（E）的组件。高阶组件让我们的代码更具有复用性，逻辑性与抽象特。它可以对props和state进行控制，也可以对render方法进行劫持...  
 3，使用场景：<br/>
 （1）复用代码。抽出相同逻辑，复用通过props通信  
-4，属性代理。 它通过做一些操作，将被包裹组件的props和新生成的props一起传递给此组件  
+（2）如果只在传入组件的外围进行一些操作，使用属性代理。  
+（3）如果想在传入组件的内部进行操作，使用反向继承。比如改写render。  
+4，属性代理。 调用传入的组件  
 ```js
     export default function withHeader(WrappedComponent) {
         return class HOC extends Component {
@@ -28,7 +30,7 @@
         }
     }
 ```
-5，反向继承。 高阶组件继承于被包裹的React组件  
+5，反向继承。 继承传入的组件  
 ```js
     export default function (WrappedComponent) {
         return class Inheritance extends WrappedComponent {
@@ -48,7 +50,12 @@
 1,如果要Context发挥作用，需要用到两种组件，一个是Context生产者(Provider)，通常是一个父节点，另外是一个Context的消费者(Consumer)，通常是一个或者多个子节点。所以Context的使用基于生产者消费者模式。  
 2,对于父组件，也就是Context生产者，需要通过一个静态属性childContextTypes声明提供给子组件的Context对象的属性，并实现一个实例getChildContext方法，返回一个代表Context的纯对象 (plain object) 。  
 3,而对于Context的消费者,子组件需要通过一个静态属性contextTypes声明后，才能访问父组件Context对象的属性  
-4，context 打破了组件和组件之间通过 props 传递数据的规范，极大地增强了组件之间的耦合性。而且，就如全局变量一样，context 里面的数据能被随意接触就能被随意修改，每个组件都能够改 context 里面的内容会导致程序的运行不可预料。  
+4，缺点：  
+context 打破了组件和组件之间通过 props 传递数据的规范，极大地增强了组件之间的耦合性。而且，就如全局变量一样，context 里面的数据能被随意接触就能被随意修改，每个组件都能够改 context 里面的内容会导致程序的运行不可预料。  
+5，优点：  
+省去了层层传递的麻烦  
+6，使用场景：  
+对所有共享状态的一些只读信息可以采用context来传递。比如登录用户等  
 
 ### Pure Function（纯函数）
 1，函数的返回结果只依赖于它的参数。  
@@ -97,6 +104,38 @@
 （2）约定所有对数据的操作必须通过 dispatch 函数。  
 （3）约定reducer纯函数，使程序变得可预测。 
 （4）共享结构，不能修改state。可以用immutable  
+
+2，什么是redux？  
+ redux是一个可预测状态的‘容器’。  
+ 将redux理解成一个严格规定了使用模式的库。  
+ 通过一系列的约定，使数据状态变得可预测。  
+
+3，设计哲学  
+（1）single source of truth  
+（2）state is read-only  
+（3）change are made with prue function called reducer  
+
+4,在redux架构下保证不可变性  
+（1）基本数据类型的值是不可变（不可变性）  
+```js
+    //存放在栈中
+    var a = 10;
+    var b = a;
+    a++;
+    console.log(a) // 11
+    console.log(b) //10
+```
+（2）引用数据类型的值是可变的（共享）  
+```js
+    //存放在堆中，a,b都指向数组[1,2,3]
+    var a = [1, 2, 3];
+    var b = a;
+    a[0] = 0;
+    console.log(a) //[0, 2, 3]
+    console.log(b) //[0, 2, 3]
+```
+（3）数组和对象操作，都应该保证不可变性。（可借助immutable库）  
+（4）用js的slice，filter，map，concat,reducer, ...等等能满足，也不必用immmutable库。  
 
 ### react-redux
 1，为什么用react-redux库，不直接用redux？  
