@@ -6,6 +6,7 @@ export class Provider extends Component{
         store: PropTypes.object,
         children: PropTypes.any
     }
+    // context Provider
     static childContextTypes = {
         store: PropTypes.object
     }
@@ -37,7 +38,7 @@ export const connect = (mapStateToProps, mapDispatchToProps) => WarpComponent =>
         static contextTypes = {
             store: PropTypes.object
         }
-
+        
         componentWillMount() {
             const { store } = this.context;
             // init

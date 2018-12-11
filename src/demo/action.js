@@ -10,7 +10,7 @@ let appState = {
   }
 }
 
-function dispatch (action) {
+export function dispatch(action) {
   switch (action.type) {
     case 'UPDATE_TITLE_TEXT':
       appState.title.text = action.text

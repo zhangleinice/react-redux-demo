@@ -1,44 +1,114 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## 安装
+```sh
+    git clone git@github.com:zhangleinice/react-redux-demo.git
+    npm install
+    npm start
+```
 
-## Available Scripts
+## redux,react-redux学习，实现一个简易的redux和react-redux库
 
-In the project directory, you can run:
+### hoc
+1，高阶组件就是一个函数，传给它一个组件，它返回一个新的组件  
+2，用一个容器（w）把React组件包裹，高阶组件会返回一个增强（E）的组件。高阶组件让我们的代码更具有复用性，逻辑性与抽象特。它可以对props和state进行控制，也可以对render方法进行劫持...  
+3，使用场景：<br/>
+（1）复用代码。抽出相同逻辑，复用通过props通信  
+4，属性代理。 它通过做一些操作，将被包裹组件的props和新生成的props一起传递给此组件  
+```js
+    export default function withHeader(WrappedComponent) {
+        return class HOC extends Component {
+            render() {
+            const newProps = {
+                test:'hoc'
+            }
+            // 透传props，并且传递新的newProps
+            return <div>
+                <WrappedComponent {...this.props} {...newProps}/>
+            </div>
+            }
+        }
+    }
+```
+5，反向继承。 高阶组件继承于被包裹的React组件  
+```js
+    export default function (WrappedComponent) {
+        return class Inheritance extends WrappedComponent {
+            componentDidMount() {
+                // 可以方便地得到state，做一些更深入的修改。
+                console.log(this.state);
+            }
+            render() {
+                //可以做渲染劫持
+                return super.render();
+            }
+        }
+    }
+```
 
-### `npm start`
+### context(Consumer, Provider)
+1,如果要Context发挥作用，需要用到两种组件，一个是Context生产者(Provider)，通常是一个父节点，另外是一个Context的消费者(Consumer)，通常是一个或者多个子节点。所以Context的使用基于生产者消费者模式。  
+2,对于父组件，也就是Context生产者，需要通过一个静态属性childContextTypes声明提供给子组件的Context对象的属性，并实现一个实例getChildContext方法，返回一个代表Context的纯对象 (plain object) 。  
+3,而对于Context的消费者,子组件需要通过一个静态属性contextTypes声明后，才能访问父组件Context对象的属性  
+4，context 打破了组件和组件之间通过 props 传递数据的规范，极大地增强了组件之间的耦合性。而且，就如全局变量一样，context 里面的数据能被随意接触就能被随意修改，每个组件都能够改 context 里面的内容会导致程序的运行不可预料。  
 
-Runs the app in the development mode.<br>
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+### Pure Function（纯函数）
+1，函数的返回结果只依赖于它的参数。  
+```js
+    // （1）foo不是纯函数，只依赖外部变量
+    const a = 1
+    const foo = (b) => a + b
+    foo(2) // => 3
 
-The page will reload if you make edits.<br>
-You will also see any lint errors in the console.
+    // （1）foo是纯函数，只依赖参数
+    const foo = (x, b) => x + b
+    foo(1, 2) // => 3
+```
+2，函数执行过程里面没有副作用。   
+```js
+    // （1）foo是纯函数，没有副作用
+    const foo = (obj, b) => {
+        return obj.x + b
+    }
+    const counter = { x: 1 }
+    foo(counter, 2) // => 3
 
-### `npm test`
+    // （2）foo不是纯函数，有副作用
+    const foo = (obj, b) => {
+        //修改了obj的值
+        obj.x = 2
+        return obj.x + b
+    }
+    const counter = { x: 1 }
+    foo(counter, 2) // => 4
 
-Launches the test runner in the interactive watch mode.<br>
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+    // （3）foo是纯函数，没有副作用
+    const foo = (b) => {
+        const obj = { x: 1 }
+        obj.x = 2
+        return obj.x + b
+    }
+```
+3,调用 DOM API 修改页面，或者你发送了 Ajax 请求，还有调用 window.reload 刷新浏览器，甚至是 console.log 往控制台打印数据也是副作用。  
 
-### `npm run build`
+4,纯函数很严格，也就是说你几乎除了计算数据以外什么都不能干，计算的时候还不能依赖除了函数参数以外的数据。  
 
-Builds the app for production to the `build` folder.<br>
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### redux
+1，为什么要用redux？  
+（1）使用context共享状态，所有子组件都可以对context进行修改，导致程序的运行不可预料。  
+（2）约定所有对数据的操作必须通过 dispatch 函数。  
+（3）约定reducer纯函数，使程序变得可预测。 
+（4）共享结构，不能修改state。可以用immutable  
 
-The build is minified and the filenames include the hashes.<br>
-Your app is ready to be deployed!
+### react-redux
+1，为什么用react-redux库，不直接用redux？  
+（1）有大量重复的逻辑：它们基本的逻辑都是，取出 context，取出里面的 store，然后用里面的状态设置自己的状态，这些代码逻辑其实都是相同的。  
+（2）对 context 依赖性过强：这些组件都要依赖 context 来取数据，使得这个组件复用性基本为零。想一下，如果别人需要用到里面的 ThemeSwitch 组件，但是他们的组件树并没有 context 也没有 store，他们没法用这个组件了。  
+2，connect抽出取context的逻辑  
+3，在Provider创建context，去掉组件里创建context  
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### [参考react小书](http://huziketang.mangojuice.top/books/react/lesson38)
 
-### `npm run eject`
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
 
-Instead, it will copy all the configuration files and the transitive dependencies (Webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
 
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
