@@ -110,6 +110,10 @@ context 打破了组件和组件之间通过 props 传递数据的规范，极�
  将redux理解成一个严格规定了使用模式的库。  
  通过一系列的约定，使数据状态变得可预测。  
 
+3,redux两个显著特点  
+可预测性（Reducer 是纯函数）。  
+扩展性强（middleware）。  
+
 3，设计哲学  
 （1）single source of truth  
 （2）state is read-only  
